@@ -1,6 +1,6 @@
 const fetch = require('request-promise');
 const $ = require('cheerio');
-
+/*
 const iosUrl = 'https://skemasys.akademiaarhus.dk/index.php?educationId=1&menuId=1&account=timetable_subject&subjectId=18596';
 const algoritmerUrl = 'https://skemasys.akademiaarhus.dk/index.php?educationId=1&menuId=1&account=timetable_subject&subjectId=18593';
 const progSprogUrl = 'https://skemasys.akademiaarhus.dk/index.php?educationId=1&menuId=1&account=timetable_subject&subjectId=18597';
@@ -18,9 +18,10 @@ async function app() {
 
   console.log(combinedSchedules);
 } 
+*/
 
 //Scrapes the url and builds an object with all the dates as individual properties
-async function scrapeSchedule(url){
+exports.scrapeSchedule = async (url) => {
   let html = await fetch(url);
   const weekTables = $('table.calendar', html); // Object with all the tables representing a school week
   const schedule = {
@@ -63,7 +64,7 @@ async function scrapeSchedule(url){
 }
 
 // Combines two or more schedules into one schedule
-function combineSchedules(schedule_A, ...moreSchedules) {
+exports.combineSchedules = (schedule_A, ...moreSchedules) => {
   const newSchedule = JSON.parse(JSON.stringify(schedule_A));
 
   for (schedule of moreSchedules) {
@@ -115,47 +116,4 @@ function sortKeysOfObject(unordered) {
   });
 
   return ordered;
-}
-
-
-// --------------------------------------------------------------------------
-// Scapes the url and builds an array of week objects
-async function scrapeScheduleWeeks(url){
-  let html = await fetch(url);
-  const weekTables = $('table.calendar', html);
-  const schedule = [];
-
-  for (let i = 0; i<weekTables.length; i++) {
-    const week = {classStart: [], Mandag: {}, Tirsdag: {}, Onsdag: {}, Torsdag: {}, Fredag: {}};
-
-    const weekDays = $('.header', weekTables[i]); // Containing the weekdays with dates: 'Weekday dd/mm'
-    const classTimes = $('.leftHeader', weekTables[i]); // Containing all the times that classes start 'hh/mm'.  
-    const weekClasses = $('.date', weekTables[i]); // Containing all the classes for the week 'CLASS TEACHERALIAS ROOMID'. 
-
-
-    for (let i = 0; i<weekDays.length; i++) {
-      const date = $(weekDays[i]).text().split(' ')[1];
-      const weekday = $(weekDays[i]).text().split(' ')[0]; 
-      week[weekday].date = date //<-- Build week object
-
-      //console.log(` ----- ${weekday} ${date}`);
-
-      for (let j = 0; j<classTimes.length; j++) {
-        const classTime = $(classTimes[j]).text().trim();
-        const subject = $(weekClasses[i+j*5]).text().trim();
-        week[weekday][classTime] = subject; //<-- Build week object
-
-        //console.log(classTime + ' | ' + subject);
-      }
-    }
-
-    for (let j = 0; j<classTimes.length; j++) {
-      const classTime = $(classTimes[j]).text().trim();
-      week.classStart.push(classTime); //<-- Build week object
-    }
-    
-    schedule.push(week); //<-- Build schedule object
-  }
-  //console.log(schedule);
-  return schedule;
 }

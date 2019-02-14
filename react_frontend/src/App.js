@@ -1,71 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import WeekSchedule from './components/WeekSchedule';
 
 // Main Component
 function App() {
+  const [schedule, setSchedule] = useState({});
+
+  useEffect(async () => {
+    //const scheduleData = await fetch(url);
+
+    setSchedule();
+  }, []);
+
   return (
     <div className="App">
-      <Calendar />
-    </div>
-  );
-}
-
-
-// ========================================
-// Calendar Component
-function Calendar(props) {
-  // State
-  const [currentWeek, ChangeWeek] = useState({ 
-  classStart: [ '08:30', '10:30', '12:30', '14:30' ],
-  datesInWeek: [ '2019-6-3', '2019-6-4', '2019-6-5', '2019-6-6', '2019-6-7' ],
-  '2019-6-3':
-   { '08:30': 'IOS KSD SH-A2.03',
-     '10:30': 'IOS KSD SH-A2.03',
-     '12:30': 'IOS KSD SH-A2.03' },
-  '2019-6-4':
-   { '08:30': 'IOS KSD SH-A2.03',
-     '10:30': 'IOS KSD SH-A2.03',
-     '12:30': 'IOS KSD SH-A2.03' },
-  '2019-6-5': 
-  { '08:30': '' },
-  '2019-6-6': 
-  { '08:30': 'IOS KSD SH-A2.03', 
-    '10:30': 'IOS KSD SH-A2.03' },
-  '2019-6-7': 
-  { '08:30': 'IOS KSD SH-A2.03', 
-    '10:30': 'IOS KSD SH-A2.03' } 
-  });
-
-  const calendarRows = currentWeek.classStart.map((time) => {
-    return(
-      <tr key={time}>
-        <td>{time}</td>
-        <td>{currentWeek[currentWeek.datesInWeek[0]][time]}</td>
-        <td>{currentWeek[currentWeek.datesInWeek[1]][time]}</td>
-        <td>{currentWeek[currentWeek.datesInWeek[2]][time]}</td>
-        <td>{currentWeek[currentWeek.datesInWeek[3]][time]}</td>
-        <td>{currentWeek[currentWeek.datesInWeek[4]][time]}</td>
-      </tr>
-    );
-  });
-
-  return(
-    <div className="calendarWrapper"> 
-     <h2>Calendar</h2>
-      <table>
-        <thead>
-        <tr>
-          <th></th>
-          <th>Mandag  ({Object.keys(currentWeek)[2]})</th>
-          <th>Tirsdag ({Object.keys(currentWeek)[3]})</th>
-          <th>Onsdag ({Object.keys(currentWeek)[4]})</th>
-          <th>Torsdag ({Object.keys(currentWeek)[5]})</th>
-          <th>Fredag ({Object.keys(currentWeek)[6]})</th>
-        </tr>
-        </thead>
-        <tbody>
-          {calendarRows}
-        </tbody>
-      </table>
+      <WeekSchedule />
     </div>
   );
 }
@@ -94,7 +42,7 @@ function getWeekFromSchedule(schedule, week) {
       throw new Error('The specified schedule does not contain the specified week');
 }
 
-const schedule = { '2019-1-28': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD SH-A2.03' },
+const testSchedule = { '2019-1-28': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD SH-A2.03' },
 '2019-1-29': { '08:30': '' },
 '2019-1-30': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD SH-A2.03' },
 '2019-1-31':

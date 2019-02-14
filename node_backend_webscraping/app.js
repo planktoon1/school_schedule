@@ -19,12 +19,9 @@ app.use(session({
 }));
 
 // ROUTES FOR THE APP
-/*
-const adminRouter = require('./routes/admin'); //TODO
-const produktRouter = require('./routes/api/produkter'); //TODO
-app.use('/api/produkter', produktRouter);
-app.use('/admin', adminRouter);
-*/
+const scheduleRouter = require('./api/schedule'); 
+app.use('/api', scheduleRouter);
+
 
 // START THE SERVER
 //use the herouko port if we're deploying there. if not: use local port.
