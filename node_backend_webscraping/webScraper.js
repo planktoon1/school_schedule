@@ -13,9 +13,7 @@ async function app() {
     scrapeSchedule(algoritmerUrl), 
     scrapeSchedule(progSprogUrl)
   ]);
-  /*const iosSchedule = await scrapeSchedule(iosUrl);
-  const algSchedule = await scrapeSchedule(algoritmerUrl);
-  const proSchedule = await scrapeSchedule(progSprogUrl);*/
+
   const combinedSchedules = combineSchedules(iosSchedule, algSchedule, proSchedule);
 
   console.log(combinedSchedules);
@@ -52,7 +50,7 @@ async function scrapeSchedule(url){
         const classTime = $(classTimes[j]).text().trim();
         const subject = $(weekClasses[i+j*5]).text().trim();
 
-        if (subject && !schedule[date]) {
+        if (!schedule[date]/* && subject*/) { // Deliberately adding empty days 
           schedule[date] = {};
           schedule[date][classTime] = subject; //<-- Build date object
         } else if (subject && schedule[date]) {
@@ -85,7 +83,7 @@ function combineSchedules(schedule_A, ...moreSchedules) {
           newSchedule[date][time] = schedule[date][time];  
         } 
         // the date exists and the classstart time already has a class in it
-        else if (newSchedule[date] && newSchedule[date][time]) {
+        else if (newSchedule[date] && newSchedule[date][time] && schedule[date][time]) {
           if (newSchedule[date][time] !== schedule[date][time])
             newSchedule[date][time] += `\n${schedule[date][time]}`;
         }

@@ -14,24 +14,36 @@ function App() {
 // Calendar Component
 function Calendar(props) {
   // State
-  const [currentWeek, ChangeWeek] = useState({
-    classStart: ['08:30', '10:30', '12:30', '14:30'],
-    Mandag: {date: '28/01'},
-    Tirsdag: {date: '29/01'},
-    Onsdag: {date: '30/01'},
-    Torsdag: {date: '31/01', '08:30': 'Algoritmer JHAJ SH-A1.13', '10:30': 'Algoritmer JHAJ SH-A1.13'},
-    Fredag: {date: '01/02'},
+  const [currentWeek, ChangeWeek] = useState({ 
+  classStart: [ '08:30', '10:30', '12:30', '14:30' ],
+  datesInWeek: [ '2019-6-3', '2019-6-4', '2019-6-5', '2019-6-6', '2019-6-7' ],
+  '2019-6-3':
+   { '08:30': 'IOS KSD SH-A2.03',
+     '10:30': 'IOS KSD SH-A2.03',
+     '12:30': 'IOS KSD SH-A2.03' },
+  '2019-6-4':
+   { '08:30': 'IOS KSD SH-A2.03',
+     '10:30': 'IOS KSD SH-A2.03',
+     '12:30': 'IOS KSD SH-A2.03' },
+  '2019-6-5': 
+  { '08:30': '' },
+  '2019-6-6': 
+  { '08:30': 'IOS KSD SH-A2.03', 
+    '10:30': 'IOS KSD SH-A2.03' },
+  '2019-6-7': 
+  { '08:30': 'IOS KSD SH-A2.03', 
+    '10:30': 'IOS KSD SH-A2.03' } 
   });
 
   const calendarRows = currentWeek.classStart.map((time) => {
     return(
       <tr key={time}>
         <td>{time}</td>
-        <td>{currentWeek.Mandag[time]}</td>
-        <td>{currentWeek.Tirsdag[time]}</td>
-        <td>{currentWeek.Onsdag[time]}</td>
-        <td>{currentWeek.Torsdag[time]}</td>
-        <td>{currentWeek.Fredag[time]}</td>
+        <td>{currentWeek[currentWeek.datesInWeek[0]][time]}</td>
+        <td>{currentWeek[currentWeek.datesInWeek[1]][time]}</td>
+        <td>{currentWeek[currentWeek.datesInWeek[2]][time]}</td>
+        <td>{currentWeek[currentWeek.datesInWeek[3]][time]}</td>
+        <td>{currentWeek[currentWeek.datesInWeek[4]][time]}</td>
       </tr>
     );
   });
@@ -43,11 +55,11 @@ function Calendar(props) {
         <thead>
         <tr>
           <th></th>
-          <th>Mandag  ({currentWeek.Mandag.date})</th>
-          <th>Tirsdag ({currentWeek.Tirsdag.date})</th>
-          <th>Onsdag ({currentWeek.Onsdag.date})</th>
-          <th>Torsdag ({currentWeek.Torsdag.date})</th>
-          <th>Fredag ({currentWeek.Fredag.date})</th>
+          <th>Mandag  ({Object.keys(currentWeek)[2]})</th>
+          <th>Tirsdag ({Object.keys(currentWeek)[3]})</th>
+          <th>Onsdag ({Object.keys(currentWeek)[4]})</th>
+          <th>Torsdag ({Object.keys(currentWeek)[5]})</th>
+          <th>Fredag ({Object.keys(currentWeek)[6]})</th>
         </tr>
         </thead>
         <tbody>
@@ -66,15 +78,24 @@ Date.prototype.getWeek = function() {
   return Math.ceil((((this - onejan) / 86400000) + onejan.getDay())/7);
 }
 
-// Extracts the activities from the specified week and returns a "week schedule"
+// Extracts the activities from the specified week(week number) and returns a "week schedule"
+// Throws an error if the schedule doesn't contain the specified week
 function getWeekFromSchedule(schedule, week) {
   const datesInWeek = Object.keys(schedule).filter(date => new Date(date).getWeek() === week)
-  const weekSchedule = {};
-  datesInWeek.forEach(date => {weekSchedule[date] = schedule[date]});
-  return weekSchedule;
+  const weekSchedule = {
+      classStart: schedule.classStart,
+      datesInWeek,
+  };
+  datesInWeek.forEach( date => {weekSchedule[date] = schedule[date]});
+
+  if (Object.keys(weekSchedule).length === 7)
+      return weekSchedule;
+  else 
+      throw new Error('The specified schedule does not contain the specified week');
 }
 
 const schedule = { '2019-1-28': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD SH-A2.03' },
+'2019-1-29': { '08:30': '' },
 '2019-1-30': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD SH-A2.03' },
 '2019-1-31':
  { '08:30': 'Algoritmer JHAJ SH-A1.13',
@@ -87,10 +108,15 @@ const schedule = { '2019-1-28': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD
  { '08:30': 'Programmeringssprog MJU SH-A1.13',
    '10:30': 'Programmeringssprog MJU SH-A1.13' },
 '2019-2-13': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD SH-A2.03' },
+'2019-2-14': { '08:30': '' },
+'2019-2-15': { '08:30': '' },
+'2019-2-18': { '08:30': '' },
 '2019-2-19':
  { '08:30': 'Programmeringssprog MJU SH-A1.13',
    '10:30': 'Programmeringssprog MJU SH-A1.13' },
 '2019-2-20': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD SH-A2.03' },
+'2019-2-21': { '08:30': '' },
+'2019-2-22': { '08:30': '' },
 '2019-2-25': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD SH-A2.03' },
 '2019-2-26':
  { '08:30': 'Programmeringssprog MJU SH-A1.19B',
@@ -119,6 +145,7 @@ const schedule = { '2019-1-28': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD
 '2019-3-11':
  { '08:30': 'Algoritmer JHAJ SH-A1.19B',
    '10:30': 'Algoritmer JHAJ SH-A1.19B' },
+'2019-3-12': { '08:30': '' },
 '2019-3-13': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD SH-A2.03' },
 '2019-3-14':
  { '08:30': 'Algoritmer JHAJ SH-A1.13',
@@ -140,6 +167,7 @@ const schedule = { '2019-1-28': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD
 '2019-3-22':
  { '08:30': 'Programmeringssprog PEJU SH-A2.02',
    '10:30': 'Programmeringssprog PEJU SH-A2.02' },
+'2019-3-25': { '08:30': '' },
 '2019-3-26':
  { '08:30': 'Programmeringssprog MJU SH-A1.13',
    '10:30': 'Programmeringssprog MJU SH-A1.13' },
@@ -150,6 +178,7 @@ const schedule = { '2019-1-28': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD
 '2019-3-29':
  { '08:30': 'Programmeringssprog PEJU SH-A2.02',
    '10:30': 'Programmeringssprog PEJU SH-A2.02' },
+'2019-3-4': { '08:30': '' },
 '2019-3-5':
  { '08:30': 'Programmeringssprog MJU SH-A1.13',
    '10:30': 'Programmeringssprog MJU SH-A1.13',
@@ -194,6 +223,7 @@ const schedule = { '2019-1-28': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD
    '10:30': 'P�skeferie',
    '12:30': 'P�skeferie',
    '14:30': 'P�skeferie' },
+'2019-4-2': { '08:30': '' },
 '2019-4-22':
  { '08:30': 'P�skeferie',
    '10:30': 'P�skeferie',
@@ -206,6 +236,8 @@ const schedule = { '2019-1-28': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD
 '2019-4-25':
  { '08:30': 'Algoritmer JHAJ SH-A1.19B',
    '10:30': 'Algoritmer JHAJ SH-A1.19B' },
+'2019-4-26': { '08:30': '' },
+'2019-4-29': { '08:30': '' },
 '2019-4-3': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD SH-A2.03' },
 '2019-4-30':
  { '08:30': 'Programmeringssprog PEJU SH-A1.13',
@@ -231,6 +263,7 @@ const schedule = { '2019-1-28': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD
    '10:30': 'Algoritmer JHAJ SH-A1.19B',
    '12:30': 'Algoritmer JHAJ SH-A1.19B',
    '14:30': 'Algoritmer JHAJ SH-A1.19B' },
+'2019-5-15': { '08:30': '' },
 '2019-5-16':
  { '08:30': 'Algoritmer JHAJ SH-A1.19B',
    '10:30': 'Algoritmer JHAJ SH-A1.19B',
@@ -247,7 +280,8 @@ const schedule = { '2019-1-28': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD
  { '08:30': 'Programmeringssprog MJU SH-A2.02',
    '10:30': 'Programmeringssprog MJU SH-A2.02',
    '12:30': 'Programmeringssprog PEJU SH-A2.02' },
-'2019-5-21': { '12:30': 'Programmeringssprog PEJU SH-A1.19B' },
+'2019-5-21':
+ { '08:30': '', '12:30': 'Programmeringssprog PEJU SH-A1.19B' },
 '2019-5-22':
  { '08:30': 'Programmeringssprog MJU SH-A2.02',
    '10:30': 'Programmeringssprog MJU SH-A2.02' },
@@ -257,6 +291,10 @@ const schedule = { '2019-1-28': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD
 '2019-5-24':
  { '08:30': 'Programmeringssprog MJU SH-A2.02',
    '10:30': 'Programmeringssprog PEJU SH-A2.02' },
+'2019-5-27': { '08:30': '' },
+'2019-5-28': { '08:30': '' },
+'2019-5-29': { '08:30': '' },
+'2019-5-3': { '08:30': '' },
 '2019-5-30':
  { '08:30': 'Kr Himmelfart',
    '10:30': 'Kr Himmelfart',
@@ -286,6 +324,7 @@ const schedule = { '2019-1-28': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD
  { '08:30': 'IOS KSD SH-A2.03',
    '10:30': 'IOS KSD SH-A2.03',
    '12:30': 'IOS KSD SH-A2.03' },
+'2019-6-5': { '08:30': '' },
 '2019-6-6': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD SH-A2.03' },
 '2019-6-7': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD SH-A2.03' },
 classStart: [ '08:30', '10:30', '12:30', '14:30' ] };
