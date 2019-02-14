@@ -1,16 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import WeekSchedule from './components/WeekSchedule';
 
 // Main Component
 function App() {
   const [schedule, setSchedule] = useState({});
+  const [currentWeek, setCurrentWeek] = useState()
 
-  useEffect(async () => {
-    //const scheduleData = await fetch(url);
+  const fetchSchedule = async (url) => {
+    const result = await fetch(url );
+    //const scheduleForWeek6 = getWeekFromSchedule(result, 7);
+    console.log(result); //TODO - future me debug this 
+  }
 
-    setSchedule();
+  useEffect( () => {
+    const result = fetchSchedule('http://localhost:8080/api/combine/educationId=1&menuId=1&account=timetable_subject&subjectId=18596/educationId=1&menuId=1&account=timetable_subject&subjectId=18593/educationId=1&menuId=1&account=timetable_subject&subjectId=18597')
+
   }, []);
-
+  
   return (
     <div className="App">
       <WeekSchedule />

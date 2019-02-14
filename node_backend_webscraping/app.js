@@ -17,6 +17,12 @@ app.use(session({
     saveUninitialized: true, 
     resave: true
 }));
+app.use(function(req, res, next) { //Allow other sites to access CORS
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 
 // ROUTES FOR THE APP
 const scheduleRouter = require('./api/schedule'); 
