@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 /*  WeekSchedule Component
@@ -8,18 +8,15 @@ import PropTypes from "prop-types";
 */
 
 function WeekSchedule(props) {
-  // State
-  const [currentWeek, ChangeWeek] = useState(props.week);
-
-  const calendarRows = currentWeek.classStart.map(time => {
+  const calendarRows = props.week.classStart.map(time => {
     return (
       <tr key={time}>
         <td>{time}</td>
-        <td>{currentWeek[currentWeek.datesInWeek[0]][time]}</td>
-        <td>{currentWeek[currentWeek.datesInWeek[1]][time]}</td>
-        <td>{currentWeek[currentWeek.datesInWeek[2]][time]}</td>
-        <td>{currentWeek[currentWeek.datesInWeek[3]][time]}</td>
-        <td>{currentWeek[currentWeek.datesInWeek[4]][time]}</td>
+        <td>{props.week[props.week.datesInWeek[0]][time]}</td>
+        <td>{props.week[props.week.datesInWeek[1]][time]}</td>
+        <td>{props.week[props.week.datesInWeek[2]][time]}</td>
+        <td>{props.week[props.week.datesInWeek[3]][time]}</td>
+        <td>{props.week[props.week.datesInWeek[4]][time]}</td>
       </tr>
     );
   });
@@ -31,11 +28,11 @@ function WeekSchedule(props) {
         <thead>
           <tr>
             <th />
-            <th>Mandag ({Object.keys(currentWeek)[2]})</th>
-            <th>Tirsdag ({Object.keys(currentWeek)[3]})</th>
-            <th>Onsdag ({Object.keys(currentWeek)[4]})</th>
-            <th>Torsdag ({Object.keys(currentWeek)[5]})</th>
-            <th>Fredag ({Object.keys(currentWeek)[6]})</th>
+            <th>Mandag ({Object.keys(props.week)[2]})</th>
+            <th>Tirsdag ({Object.keys(props.week)[3]})</th>
+            <th>Onsdag ({Object.keys(props.week)[4]})</th>
+            <th>Torsdag ({Object.keys(props.week)[5]})</th>
+            <th>Fredag ({Object.keys(props.week)[6]})</th>
           </tr>
         </thead>
         <tbody>{calendarRows}</tbody>
