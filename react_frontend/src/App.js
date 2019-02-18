@@ -1,32 +1,69 @@
 import React, { useState, useEffect } from 'react';
 import WeekSchedule from './components/WeekSchedule';
+import Input from './components/Input';
 
 // Main Component
 function App() {
-  const [schedule, setSchedule] = useState();
-  const [currentWeek, setCurrentWeek] = useState()
+  const [schedule, setSchedule] = useState({});
+  const [currentWeek, setCurrentWeek] = useState({
+    weekNo: new Date().getWeek(),
+    
+  });
 
-  const fetchSchedule = async (url) => {
-    fetch(url)
-      .then(response => response.json())
-      .then(json => setCurrentWeek(getWeekFromSchedule(json, 8)))
-  }
 
   useEffect( () => {
     fetchSchedule('http://localhost:8080/api/combine/educationId=1&menuId=1&account=timetable_subject&subjectId=18596/educationId=1&menuId=1&account=timetable_subject&subjectId=18593/educationId=1&menuId=1&account=timetable_subject&subjectId=18597')
     
   }, []);
+
+  const fetchSchedule = async (url) => {
+    fetch(url)
+      .then(response => response.json())
+      .then(json => {
+        setSchedule(json);
+      })
+  }
+
   
   return (
     <div className="App">
-      <WeekSchedule week={currentWeek}/>
+      <Form changeCurrentWeek={setCurrentWeek}/>
+      <WeekSchedule week={currentWeek.schedule}/>
     </div>
   );
 }
 
+// Form Component
+const Form = (props) => {
+  const [values, setValues] = useState({ weekInput: "" });
+
+  const onChange = (name, value) => {
+    setValues({ ...values, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    props.changeCurrentWeek(values.weekInput);
+    console.log(JSON.stringify(values.weekInput));
+  }
+
+  return (
+    <form onSubmit={e => e.preventDefault() || handleSubmit()}>
+      <Input
+        name="weekInput"
+        placeholder="uge"
+        type="text"
+        value={values.user}
+        onChange={onChange}
+      />
+      <input type="submit" />
+    </form>
+  );
+};
+
 // --------------------------- UTILITY ---------------------------
 
 // Returns the weeknumber of the date
+// eslint-disable-next-line
 Date.prototype.getWeek = function() {
   var onejan = new Date(this.getFullYear(),0,1);
   return Math.ceil((((this - onejan) / 86400000) + onejan.getDay())/7);
@@ -35,6 +72,8 @@ Date.prototype.getWeek = function() {
 // Extracts the activities from the specified week(week number) and returns a "week schedule"
 // Throws an error if the schedule doesn't contain the specified week
 function getWeekFromSchedule(schedule, week) {
+  console.log('keys: ' + Object.keys(schedule).length)
+  console.log('week: ' + week)
   const datesInWeek = Object.keys(schedule).filter(date => new Date(date).getWeek() === week)
   const weekSchedule = {
       classStart: schedule.classStart,
@@ -45,9 +84,10 @@ function getWeekFromSchedule(schedule, week) {
   if (Object.keys(weekSchedule).length === 7)
       return weekSchedule;
   else 
-      throw new Error('The specified schedule does not contain the specified week');
+      console.log();//throw new Error('The specified schedule does not contain the specified week');
 }
 
+/*
 const testSchedule = { '2019-1-28': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD SH-A2.03' },
 '2019-1-29': { '08:30': '' },
 '2019-1-30': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD SH-A2.03' },
@@ -282,6 +322,6 @@ const testSchedule = { '2019-1-28': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS
 '2019-6-6': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD SH-A2.03' },
 '2019-6-7': { '08:30': 'IOS KSD SH-A2.03', '10:30': 'IOS KSD SH-A2.03' },
 classStart: [ '08:30', '10:30', '12:30', '14:30' ] };
-
+*/
 // ========================================
 export default App;

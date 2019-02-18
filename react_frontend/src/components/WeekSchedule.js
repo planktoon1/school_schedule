@@ -23,8 +23,7 @@ function WeekSchedule(props) {
 
   return (
     <div className="calendarWrapper">
-      <h2>Calendar</h2>
-      <table>
+      <table id="weekSchedule">
         <thead>
           <tr>
             <th />
